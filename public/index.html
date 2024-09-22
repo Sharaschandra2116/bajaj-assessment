@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AP21110010705</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            color: #1a73e8;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        /* Input box for JSON */
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /* Submit button */
+        button {
+            background-color: #1a73e8;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            width: 100%;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background-color: #155ab6;
+        }
+
+        /* Dropdown and Filter Section */
+        .checkbox-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .checkbox-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /* Response section */
+        .response-container {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f7f7f7;
+        }
+
+        /* Filtered response text */
+        .response-container p {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .multi-filter {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .multi-filter label {
+            margin-right: 10px;
+        }
+
+        .filtered-response {
+            font-size: 14px;
+            color: #333;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">        
+        <!-- Input Section -->
+        <h2>API Input</h2>
+        <textarea id="jsonInput" placeholder="Enter JSON input here">{ "data": ["M","1","334","4","B"] }</textarea>
+        <button onclick="submitData()">Submit</button>
+
+        <!-- Multi Filter Section -->
+        <h2>Multi Filter</h2>
+        <div class="multi-filter">
+            <select id="multiFilter" multiple>
+                <option value="Alphabets">Alphabets</option>
+                <option value="Numbers">Numbers</option>
+                <option value="Highest Lowercase Alphabet">Highest Lowercase Alphabet</option>
+            </select>
+        </div>
+
+        <!-- Response Section -->
+        <div id="responseData" class="response-container">
+            <h3>Filtered Response</h3>
+            <div id="filteredResponse"></div>
+        </div>
+    </div>
+
+    <script>
+        async function submitData() {
+            const jsonInput = document.getElementById('jsonInput').value;
+            const selectedOptions = Array.from(document.querySelectorAll('#multiFilter option:checked'))
+                                        .map(option => option.value);
+
+            try {
+                const response = await fetch('/bfhl', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: jsonInput
+                });
+
+                const data = await response.json();
+                displayResponse(data, selectedOptions);
+            } catch (err) {
+                document.getElementById('filteredResponse').innerText = 'Error: Invalid JSON or server issue.';
+            }
+        }
+
+        function displayResponse(data, options) {
+            let output = '';
+
+            if (options.includes('Alphabets')) {
+                output += `<p><strong>Alphabets:</strong> ${data.alphabets.join(', ')}</p>`;
+            }
+            if (options.includes('Numbers')) {
+                output += `<p><strong>Numbers:</strong> ${data.numbers.join(', ')}</p>`;
+            }
+            if (options.includes('Highest Lowercase Alphabet')) {
+                output += `<p><strong>Highest Lowercase Alphabet:</strong> ${data.highest_lowercase_alphabet.join(', ')}</p>`;
+            }
+
+            document.getElementById('filteredResponse').innerHTML = output;
+        }
+    </script>
+</body>
+</html>
