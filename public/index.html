@@ -49,20 +49,25 @@
             background-color: #155ab6;
         }
 
-        /* Dropdown and Filter Section */
-        .checkbox-group {
+        /* Multi Filter Container */
+        .multi-filter-container {
             margin-top: 20px;
-            display: flex;
-            gap: 10px;
-            justify-content: space-between;
-        }
-
-        .checkbox-group select {
-            width: 100%;
-            padding: 8px;
+            padding: 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
+            background-color: #f7f7f7;
+        }
+
+        /* Checkbox styles */
+        .multi-filter {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .multi-filter label {
             font-size: 14px;
+            cursor: pointer;
         }
 
         /* Response section */
@@ -78,18 +83,6 @@
         .response-container p {
             font-size: 14px;
             color: #333;
-        }
-
-        .multi-filter {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-
-        .multi-filter label {
-            margin-right: 10px;
         }
 
         .filtered-response {
@@ -108,12 +101,18 @@
 
         <!-- Multi Filter Section -->
         <h2>Multi Filter</h2>
-        <div class="multi-filter">
-            <select id="multiFilter" multiple>
-                <option value="Alphabets">Alphabets</option>
-                <option value="Numbers">Numbers</option>
-                <option value="Highest Lowercase Alphabet">Highest Lowercase Alphabet</option>
-            </select>
+        <div class="multi-filter-container">
+            <div class="multi-filter">
+                <label>
+                    <input type="checkbox" value="Alphabets"> Alphabets
+                </label>
+                <label>
+                    <input type="checkbox" value="Numbers"> Numbers
+                </label>
+                <label>
+                    <input type="checkbox" value="Highest Lowercase Alphabet"> Highest Lowercase Alphabet
+                </label>
+            </div>
         </div>
 
         <!-- Response Section -->
@@ -126,8 +125,8 @@
     <script>
         async function submitData() {
             const jsonInput = document.getElementById('jsonInput').value;
-            const selectedOptions = Array.from(document.querySelectorAll('#multiFilter option:checked'))
-                                        .map(option => option.value);
+            const selectedOptions = Array.from(document.querySelectorAll('.multi-filter input[type="checkbox"]:checked'))
+                                        .map(checkbox => checkbox.value);
 
             try {
                 const response = await fetch('/bfhl', {
