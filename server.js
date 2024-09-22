@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const atob = require('atob');
 const fs = require('fs');
 
 const app = express();
@@ -41,7 +40,7 @@ app.post('/bfhl', (req, res) => {
 
     res.json({
         is_success: true,
-        user_id: ${user.full_name}_${user.dob},
+        user_id: `${user.full_name}_${user.dob}`,
         email: user.email,
         roll_number: user.roll_number,
         numbers,
@@ -65,5 +64,5 @@ app.get('/', (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(Server running on port ${PORT});
+    console.log(`Server running on port ${PORT}`);
 });
